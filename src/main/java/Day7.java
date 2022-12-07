@@ -6,7 +6,7 @@ public class Day7 {
 
     public static void main(String[] args) {
         var inputs = Util.readStrings();
-        //Util.submitPart1(part1(inputs));
+        Util.submitPart1(part1(inputs));
         Util.submitPart2(part2(inputs));
     }
 
@@ -16,7 +16,7 @@ public class Day7 {
 
         List<Path> paths = new ArrayList<>();
         findPaths2(root, paths);
-        Collections.sort(paths, Comparator.comparingInt(a -> a.totalSize));
+        paths.sort(Comparator.comparingInt(a -> a.totalSize));
         int req = 30000000 - (70000000 - root.totalSize);
         for (Path path : paths) {
             if (path.totalSize >= req) {
