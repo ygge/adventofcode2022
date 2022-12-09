@@ -14,6 +14,10 @@ public class Pos {
         return new Pos(x+dir.dx, y+dir.dy);
     }
 
+    public int dist(Pos other) {
+        return Math.abs(x-other.x) + Math.abs(y - other.y);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -30,7 +34,7 @@ public class Pos {
 
     @Override
     public String toString() {
-        return "util.Pos{" +
+        return "Pos{" +
                 "x=" + x +
                 ", y=" + y +
                 '}';
