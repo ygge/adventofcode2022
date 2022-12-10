@@ -52,7 +52,6 @@ public class Day10 {
             ++cycle;
             if (num.contains(cycle)) {
                 sum += x*cycle;
-                System.out.println(x + " " + x*cycle);
             }
             if (!s.equals("noop")) {
                 int dx = Integer.parseInt(s.split(" ")[1]);
@@ -60,7 +59,6 @@ public class Day10 {
                 ++cycle;
                 if (num.contains(cycle)) {
                     sum += x*cycle;
-                    System.out.println(x + " " + x*cycle);
                 }
             }
         }
