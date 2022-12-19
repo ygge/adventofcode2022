@@ -1,4 +1,3 @@
-import util.MultiDimPos;
 import util.Util;
 
 import java.util.*;
@@ -47,10 +46,13 @@ public class Day19 {
         int best = 0;
         while (!nodes.isEmpty()) {
             var node = nodes.poll();
-            if (node.time == 24) {
-                if (node.geode > best) {
-                    best = node.geode;
-                }
+            var res = node.geode + node.robots[3] * (24-node.time);
+            if (res > best) {
+                best = res;
+            } else if (node.geode + (node.robots[3] + 1) * (24-node.time) < res) {
+                continue;
+            }
+            if (node.time == 23) {
                 continue;
             }
             var n = new Node(node);
@@ -80,7 +82,8 @@ public class Day19 {
                 nn.tick();
                 ++nn.robots[2];
                 nodes.add(nn);
-            } else if (n.ore <= maxOre) {
+            }
+            if (n.ore <= maxOre) {
                 n.tick();
                 nodes.add(n);
             }
