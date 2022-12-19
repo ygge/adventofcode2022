@@ -7,52 +7,79 @@ public class Day19 {
     public static void main(String[] args) {
         Util.verifySubmission();
         var input = Util.readStrings();
-        Util.submitPart1(part1(input));
+        //Util.submitPart1(part1(input));
+        Util.submitPart2(part2(input));
+    }
+
+    private static int part2(List<String> input) {
+        List<Blueprint> blueprints = new ArrayList<>();
+        for (int i = 0; i < 3; ++i) {
+            blueprints.add(parseBlueprint(input.get(i)));
+        }
+        int result = 1;
+        for (Blueprint blueprint : blueprints) {
+            int res = calc(blueprint, 32);
+            System.out.println(blueprint.id + " " + res);
+            result *= res;
+        }
+        return result;
     }
 
     private static int part1(List<String> input) {
         List<Blueprint> blueprints = new ArrayList<>();
         for (String row : input) {
-            var r = row.split(" ");
-            var b = new Blueprint();
-            b.id = Integer.parseInt(r[1].substring(0, r[1].length()-1));
-            b.ore = new Robot();
-            b.ore.ore = Integer.parseInt(r[6]);
-            b.clay = new Robot();
-            b.clay.ore = Integer.parseInt(r[12]);
-            b.obsidian = new Robot();
-            b.obsidian.ore = Integer.parseInt(r[18]);
-            b.obsidian.clay = Integer.parseInt(r[21]);
-            b.geode = new Robot();
-            b.geode.ore = Integer.parseInt(r[27]);
-            b.geode.obsidian = Integer.parseInt(r[30]);
-            blueprints.add(b);
+            blueprints.add(parseBlueprint(row));
         }
         int result = 0;
         for (Blueprint blueprint : blueprints) {
-            int res = calc(blueprint);
+            int res = calc(blueprint, 24);
             System.out.println(blueprint.id + " " + res);
             result += blueprint.id * res;
         }
         return result;
     }
 
-    private static int calc(Blueprint blueprint) {
+    private static Blueprint parseBlueprint(String row) {
+        var r = row.split(" ");
+        var b = new Blueprint();
+        b.id = Integer.parseInt(r[1].substring(0, r[1].length()-1));
+        b.ore = new Robot();
+        b.ore.ore = Integer.parseInt(r[6]);
+        b.clay = new Robot();
+        b.clay.ore = Integer.parseInt(r[12]);
+        b.obsidian = new Robot();
+        b.obsidian.ore = Integer.parseInt(r[18]);
+        b.obsidian.clay = Integer.parseInt(r[21]);
+        b.geode = new Robot();
+        b.geode.ore = Integer.parseInt(r[27]);
+        b.geode.obsidian = Integer.parseInt(r[30]);
+        return b;
+    }
+
+    private static int calc(Blueprint blueprint, int minutes) {
         var start = new Node();
         Deque<Node> nodes = new LinkedList<>();
         nodes.add(start);
         int maxOre = Math.max(Math.max(blueprint.ore.ore, blueprint.clay.ore), Math.max(blueprint.obsidian.ore, blueprint.geode.ore));
         int maxClay = Math.max(Math.max(blueprint.ore.clay, blueprint.clay.clay), Math.max(blueprint.obsidian.clay, blueprint.geode.clay));
         int best = 0;
+        Set<Node> seen = new HashSet<>();
+        int lastTime = 0;
         while (!nodes.isEmpty()) {
             var node = nodes.poll();
-            var res = node.geode + node.robots[3] * (24-node.time);
+            var res = node.geode + node.robots[3] * (minutes-node.time);
             if (res > best) {
                 best = res;
-            } else if (node.geode + (node.robots[3] + 1) * (24-node.time) < res) {
+            } else if (node.geode + (node.robots[3] + 1) * (minutes-node.time) < res) {
                 continue;
             }
-            if (node.time == 23) {
+            if (node.time == minutes - 1) {
+                continue;
+            }
+            if (lastTime != node.time) {
+                seen = new HashSet<>();
+            }
+            if (!seen.add(node)) {
                 continue;
             }
             var n = new Node(node);
@@ -136,6 +163,19 @@ public class Day19 {
                     ", time=" + time +
                     ", robots=" + Arrays.toString(robots) +
                     '}';
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Node node = (Node) o;
+            return ore == node.ore && clay == node.clay && obsidian == node.obsidian && geode == node.geode;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(ore, clay, obsidian, geode);
         }
     }
 
