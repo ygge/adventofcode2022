@@ -9,9 +9,8 @@ public class Day22 {
     private static final int SIDE = "#........#.................#............#.........".length();
 
     public static void main(String[] args) {
-        //Util.verifySubmission();
         var input = Util.readStrings();
-        //Util.submitPart1(part1(input));
+        Util.submitPart1(part1(input));
         Util.submitPart2(part2(input));
     }
 
@@ -30,7 +29,6 @@ public class Day22 {
         }
         var dir = Direction.RIGHT;
         for (int c = 0; c < ins.length(); ) {
-            System.out.println(pos + " " + dir);
             char cc = ins.charAt(c);
             if (cc == 'R') {
                 dir = dir.turnRight();
@@ -249,7 +247,6 @@ public class Day22 {
                 }
             }
         }
-        System.out.println(pos + " " + dir);
         return (pos.y + 1) * 1000 + (pos.x + 1) * 4 + switch (dir) {
             case RIGHT -> 0;
             case DOWN -> 1;
@@ -273,7 +270,6 @@ public class Day22 {
         }
         var dir = Direction.RIGHT;
         for (int c = 0; c < ins.length();) {
-            System.out.println(pos + " " + dir);
             char cc = ins.charAt(c);
             if (cc == 'R') {
                 dir = dir.turnRight();
@@ -342,7 +338,6 @@ public class Day22 {
                 }
             }
         }
-        System.out.println(pos + " " + dir);
         return (pos.y + 1) * 1000 + (pos.x + 1) * 4 + switch (dir) {
             case RIGHT -> 0;
             case DOWN -> 1;
